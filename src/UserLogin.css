@@ -1,0 +1,44 @@
+.front-page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('./Images/vehicle refueling.jpg');
+    background-size: cover; 
+    background-position: center;
+  }
+  
+  .page-heading {
+    font-size: 36px;
+    margin-bottom: 30px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .login-button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .admin {
+    background-color: #FF4500; /* Adjust colors as needed */
+    color: #fff;
+  }
+  
+  .user {
+    background-color: #007bff; /* Adjust colors as needed */
+    color: #fff;
+  }
+  
+  .login-button:hover {
+    opacity: 0.8;
+  }
+  
