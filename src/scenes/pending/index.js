@@ -13,6 +13,42 @@ import {
 
 } from "@mui/x-data-grid";
 
+/*
+//added imports
+const { ethers } = require("ethers");
+const config = require("./config");
+//added imports ends
+
+//new code addedd
+async function getPurchasesArray() {
+  const provider = new ethers.providers.JsonRpcProvider(config.providerURL);
+
+  const wallet = new ethers.Wallet(config.privateKey, provider);
+  const contract = new ethers.Contract(config.contractAddress, config.contractABI, wallet);
+
+  const purchasesArray = await contract.getAllPurchases();
+  return purchasesArray;
+}
+
+let purchasesArray = null;
+
+try {
+  purchasesArray = await getPurchasesArray();
+
+  //for employee login
+  purchasesArray = purchasesArray.filter((item) => item.customerID === "EMP001");   //in case of employeelogin add the employeeID from login token
+
+
+  purchasesArray = purchasesArray = purchasesArray.map((row, index) => ({ ...row, id: index }));
+  console.log(purchasesArray);
+} catch (error) {
+  console.error("Error:", error);
+}
+
+
+//new code ends
+*/
+
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
