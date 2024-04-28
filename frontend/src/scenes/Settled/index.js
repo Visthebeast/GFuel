@@ -1,6 +1,6 @@
 import { Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import { mockDataSettled } from "../../data/mockData";
+// import { mockDataSettled } from "../../data/mockData";
 import Header from "../../components/Header";
 import {
   DataGrid,
@@ -11,6 +11,11 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
+import { mirage } from 'ldrs'
+
+mirage.register()
+
+// Default values shown
 
 
 function CustomToolbar() {
@@ -85,7 +90,20 @@ const Settled = () => {
     <Box m="20px">
       <Header title="Settled Transactions" subtitle="Managing the Employees" />
       {loading ? ( // Show loading indicator while data is being fetched
-        <div>Loading...</div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "75vh", // Adjust the height as needed
+          }}
+        >
+          <l-mirage
+            size="60"
+            speed="2.5"
+            color={colors.greenAccent[500]}
+          ></l-mirage>
+        </div>
       ) : (
         <Box
           m="40px 0 0 0"
