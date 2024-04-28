@@ -10,6 +10,8 @@ import {
   GridToolbarDensitySelector,
   GridToolbarExport,
 } from "@mui/x-data-grid";
+import { useEffect, useState } from "react";
+
 
 function CustomToolbar() {
   return (
@@ -23,31 +25,54 @@ function CustomToolbar() {
 }
 
 const Settled = () => {
+  const [transactions, setTransactions] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8000/api/transactions/settled"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch transactions");
+        }
+        const json = await response.json();
+        setTransactions(json);
+        setLoading(false); // Set loading to false after data is fetched
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const columns = [
-    { 
-      field: "EmployeeId", 
+    {
+      field: "employeeid",
       headerName: "Employee ID",
       flex: 1,
     },
     {
-      field:"Name",
+      field: "name",
       headerName: "Name",
       flex: 1,
     },
     {
-      field: "BillDate",
+      field: "billdate",
       headerName: "Bill Date",
       flex: 1,
     },
     {
-      field: "SettlementDate",
+      field: "settlementdate",
       headerName: "Settlement Date",
       flex: 1,
     },
     {
-      field: "TransactionValue",
+      field: "transactionvalue",
       headerName: "Transaction Amount",
       type: "number",
       headerAlign: "left",
@@ -59,48 +84,52 @@ const Settled = () => {
   return (
     <Box m="20px">
       <Header title="Settled Transactions" subtitle="Managing the Employees" />
-      <Box
-        m="40px 0 0 0"
-        height="75vh"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .name-column--cell": {
-            color: colors.greenAccent[300],
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: colors.primary[400],
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
-          },
-          "& .MuiCheckbox-root": {
-            color: `${colors.greenAccent[200]} !important`,
-          },
-          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]} !important`,
-          },
-        }}
-      >
-        <DataGrid
-          getRowId={(row) => row._id.$oid}
-          checkboxSelection
-          rows={mockDataSettled}
-          columns={columns}
-          slots={{
-            toolbar: CustomToolbar, // Use the custom toolbar as a slot
+      {loading ? ( // Show loading indicator while data is being fetched
+        <div>Loading...</div>
+      ) : (
+        <Box
+          m="40px 0 0 0"
+          height="75vh"
+          sx={{
+            "& .MuiDataGrid-root": {
+              border: "none",
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "none",
+            },
+            "& .name-column--cell": {
+              color: colors.greenAccent[300],
+            },
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: colors.blueAccent[700],
+              borderBottom: "none",
+            },
+            "& .MuiDataGrid-virtualScroller": {
+              backgroundColor: colors.primary[400],
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: "none",
+              backgroundColor: colors.blueAccent[700],
+            },
+            "& .MuiCheckbox-root": {
+              color: `${colors.greenAccent[200]} !important`,
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+              color: `${colors.grey[100]} !important`,
+            },
           }}
-        />
-      </Box>
+        >
+          <DataGrid
+            getRowId={(row) => row._id}
+            checkboxSelection
+            rows={transactions}
+            columns={columns}
+            slots={{
+              toolbar: CustomToolbar, // Use the custom toolbar as a slot
+            }}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
