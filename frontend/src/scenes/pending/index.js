@@ -1,7 +1,6 @@
 import { Box, Button, useTheme } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { tokens } from "../../theme";
-import { mockDataPending } from "../../data/mockData";
 import Header from "../../components/Header";
 import {
   DataGrid,
@@ -10,62 +9,80 @@ import {
   GridToolbarFilterButton,
   GridToolbarDensitySelector,
   GridToolbarExport,
-
 } from "@mui/x-data-grid";
+import { ethers } from "ethers";
+import { mockDataEmployees } from "../../data/mockData";
+import config from "./config";
+import { mirage } from "ldrs";
 
-/*
-//added imports
-const { ethers } = require("ethers");
-const config = require("./config");
-//added imports ends
+mirage.register();
 
-//new code addedd
-async function getPurchasesArray() {
-  const provider = new ethers.providers.JsonRpcProvider(config.providerURL);
-
-  const wallet = new ethers.Wallet(config.privateKey, provider);
-  const contract = new ethers.Contract(config.contractAddress, config.contractABI, wallet);
-
-  const purchasesArray = await contract.getAllPurchases();
-  return purchasesArray;
-}
-
-let purchasesArray = null;
-
-try {
-  purchasesArray = await getPurchasesArray();
-
-  //for employee login
-  purchasesArray = purchasesArray.filter((item) => item.customerID === "EMP001");   //in case of employeelogin add the employeeID from login token
-
-
-  purchasesArray = purchasesArray = purchasesArray.map((row, index) => ({ ...row, id: index }));
-  console.log(purchasesArray);
-} catch (error) {
-  console.error("Error:", error);
-}
-
-
-//new code ends
-*/
-
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
-      <GridToolbarExport />
-    </GridToolbarContainer>
-  );
-}
 
 const Settled = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [purchasesArray, setPurchasesArray] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPurchases = async () => {
+      try {
+        const provider = new ethers.providers.JsonRpcProvider(
+          config.providerURL
+        );
+        const wallet = new ethers.Wallet(config.privateKey, provider);
+        const contract = new ethers.Contract(
+          config.contractAddress,
+          config.contractABI,
+          wallet
+        );
+
+        const purchasesData = await contract.getAllPurchases();
+        const formattedPurchases = purchasesData.map((purchase, index) => ({
+          ...purchase,
+          id: index,
+          Name: getEmployeeName(purchase.customerID),
+        }));
+        setPurchasesArray(formattedPurchases);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching purchases:", error);
+        setError("Error fetching purchases. Please try again later.");
+        setLoading(false);
+      }
+    };
+
+    fetchPurchases();
+  }, []);
+
+  const getEmployeeName = (employeeId) => {
+    const employee = mockDataEmployees.find(
+      (emp) => emp.EmployeeId === employeeId
+    );
+    return employee ? employee.EmployeeName : "";
+  };
+
+  const [selectedRows, setSelectedRows] = React.useState([]); // State to store selected rows
+
+  const handleSelectionChange = (newSelection) => {
+    // Handle selection change here
+    // console.log("New selection:", newSelection);
+    setSelectedRows(newSelection);
+  };
+
+  const handleSettleButtonClick = () => {
+    console.log("Selected transactions:", selectedRows);
+    // You can perform actions on the selected transactions here (e.g., API call)
+  };
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   const columns = [
     {
-      field: "EmployeeId",
+      field: "customerID",
       headerName: "Employee ID",
       flex: 1,
     },
@@ -75,12 +92,12 @@ const Settled = () => {
       flex: 1,
     },
     {
-      field: "BillDate",
+      field: "date",
       headerName: "Bill Date",
       flex: 1,
     },
     {
-      field: "TransactionValue",
+      field: "price",
       headerName: "Bill Amount",
       type: "number",
       headerAlign: "left",
@@ -89,27 +106,31 @@ const Settled = () => {
     },
   ];
 
-  const [selectedRows, setSelectedRows] = React.useState([]); // State to store selected rows
-
-  const handleSelectionChange = (newSelection) => {
-    //console.log("New selection:", newSelection);
-    setSelectedRows(newSelection);
-  };
-
-  const handleSettleButtonClick = () => {
-    console.log("Selected transactions:", selectedRows);
-    // You can perform actions on the selected transactions here (e.g., API call)
-  };
-
   return (
     <Box m="20px">
-      <Header title="Settled Transactions" subtitle="Managing the Employees" />
+      <Header title="Pending Transactions" subtitle="Managing the Employees" />
+      {loading ? ( // Show loading indicator while data is being fetched
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "75vh", // Adjust the height as needed
+          }}
+        >
+          <l-mirage
+            size="60"
+            speed="2.5"
+            color={colors.greenAccent[500]}
+          ></l-mirage>
+        </div>
+      ) : (
       <Box
         display="flex"
         flexDirection="column"
         marginTop="40px"
         sx={{
-          position: "relative", // Ensure button and DataGrid are positioned relative to this container
+          position: "relative",
         }}
       >
         <Button
@@ -118,10 +139,10 @@ const Settled = () => {
           color="secondary"
           onClick={handleSettleButtonClick}
           sx={{
-            position: "absolute", // Position the button absolutely within the container
-            top: 0, // Place the button at the top of the container
-            right: 0, // Align the button to the right side
-            zIndex: 1, // Ensure the button appears above the DataGrid
+            position: "absolute",
+            top: 0,
+            right: 0,
+            zIndex: 1,
           }}
         >
           Settle Transactions
@@ -158,21 +179,24 @@ const Settled = () => {
           }}
         >
           <DataGrid
-            getRowId={(row) => row._id.$oid}
+            getRowId={(row) => row.id}
             checkboxSelection
-            onSelectionChange={(e) => console.log(e.rows)}
             onRowSelectionModelChange={handleSelectionChange}
-            rows={mockDataPending}
+            rows={purchasesArray}
             columns={columns}
             slots={{
-              toolbar: CustomToolbar, // Use the custom toolbar as a slot
+              toolbar: GridToolbarContainer,
+              columnsButton: GridToolbarColumnsButton,
+              filterButton: GridToolbarFilterButton,
+              densitySelector: GridToolbarDensitySelector,
+              exportButton: GridToolbarExport,
             }}
           />
         </Box>
       </Box>
+      )}
     </Box>
   );
 };
-
 
 export default Settled;

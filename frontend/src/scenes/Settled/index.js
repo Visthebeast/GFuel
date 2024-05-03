@@ -1,6 +1,6 @@
 import { Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-// import { mockDataSettled } from "../../data/mockData";
+import { mockDataEmployees } from "../../data/mockData";
 import Header from "../../components/Header";
 import {
   DataGrid,
@@ -43,8 +43,16 @@ const Settled = () => {
           throw new Error("Failed to fetch transactions");
         }
         const json = await response.json();
-        setTransactions(json);
-        setLoading(false); // Set loading to false after data is fetched
+
+        // Preprocess data to add employee name
+        const transactionsWithEmployeeNames = json.map((transaction) => ({
+          ...transaction,
+          name: getEmployeeName(transaction.employeeid),
+        }));
+
+        setTransactions(transactionsWithEmployeeNames);
+        setLoading(false);
+        // Set loading to false after data is fetched
       } catch (error) {
         console.error("Error fetching transactions:", error);
       }
@@ -53,8 +61,21 @@ const Settled = () => {
     fetchTransactions();
   }, []);
 
+  // console.log(transactions)
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  // Function to get employee name from employee ID
+const getEmployeeName = (employeeId) => {
+  const employee = mockDataEmployees.find(
+    (emp) => emp.EmployeeId === employeeId
+  );
+  // console.log("Employee found:", employee); // Log the found employee
+  return employee ? employee.EmployeeName : "";
+};
+
+
   const columns = [
     {
       field: "employeeid",
