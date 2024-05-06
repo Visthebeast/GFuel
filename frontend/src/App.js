@@ -45,7 +45,7 @@ function App() {
             element={
               <AuthenticatedLayout>
                 <Routes>
-                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/settled" element={<Settled />} />
                   <Route path="/pending" element={<Pending />} />
                   <Route path="/form" element={<Form />} />

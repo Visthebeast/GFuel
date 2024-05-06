@@ -1,36 +1,71 @@
-require('dotenv').config()
-const express = require("express")
-const transactionRoutes = require("./routes/transactions")
-//const collection = require("./mongo")
-const mongoose = require('mongoose')
-const cors = require("cors")
-const app = express()
-// app.use(express.json())
-app.use(express.urlencoded({ extended: true}))
-app.use(cors())
+process.env.TZ = 'UTC'
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const path = require('path');
+const cors = require('cors');
+const corsOptions = require('./config/corsOptions');
+const { logger } = require('./middleware/logEvents');
+const errorHandler = require('./middleware/errorHandler');
+const verifyJWT = require('./middleware/verifyJWT');
+const cookieParser = require('cookie-parser');
+const credentials = require('./middleware/credentials');
+const mongoose = require('mongoose');
+const connectDB = require('./config/dbConn');
+const PORT = process.env.PORT || 8000;
 
-//middleware
-app.use(express.json())
-app.use((req, res, next) =>{
-    console.log(req.path, req.method)
-    next()
-})
+// Connect to MongoDB
+connectDB();
 
-app.use('/api/transactions',transactionRoutes)
+// custom middleware logger
+app.use(logger);
 
-//connect to db
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => {
-        app.listen(process.env.PORT, () => {
-          console.log("Connected to db & listening on Port 8000");
-        });
-    })
-    .catch((error) => {
-        console.log(error)
-    })
+// Handle options credentials check - before CORS!
+// and fetch cookies credentials requirement
+app.use(credentials);
 
-//test
-// app.get("/",cors(),(req,res)=>{
-//     res.json({msg: "welcome"})
-// })
+// Cross Origin Resource Sharing
+app.use(cors(corsOptions));
 
+// built-in middleware to handle urlencoded form data
+app.use(express.urlencoded({ extended: false }));
+
+// built-in middleware for json 
+app.use(express.json());
+
+//middleware for cookies
+app.use(cookieParser());
+
+//serve static files
+app.use('/', express.static(path.join(__dirname, '/public')));
+
+// routes
+app.use('/', require('./routes/root'));
+app.use('/register', require('./routes/register'));
+app.use('/auth', require('./routes/auth'));
+app.use('/refresh', require('./routes/refresh'));
+app.use('/logout', require('./routes/logout'));
+
+
+//app.use(verifyJWT);
+
+app.use('/users', require('./routes/api/users'));
+app.use('/api/transactions', require('./routes/api/transactions'));
+
+app.all('*', (req, res) => {
+    res.status(404);
+    if (req.accepts('html')) {
+        res.sendFile(path.join(__dirname, 'views', '404.html'));
+    } else if (req.accepts('json')) {
+        res.json({ "error": "404 Not Found" });
+    } else {
+        res.type('txt').send("404 Not Found");
+    }
+});
+
+app.use(errorHandler);
+
+mongoose.connection.once('open', () => {
+    console.log('Connected to MongoDB');
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+});
