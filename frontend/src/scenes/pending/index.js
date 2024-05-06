@@ -17,13 +17,14 @@ import { mirage } from "ldrs";
 
 mirage.register();
 
-
-const Settled = () => {
+const Pending = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [purchasesArray, setPurchasesArray] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  const [settledBills, setSettledBills] = useState([]);
 
   useEffect(() => {
     const fetchPurchases = async () => {
@@ -43,8 +44,10 @@ const Settled = () => {
           ...purchase,
           id: index,
           Name: getEmployeeName(purchase.customerID),
+          employerid: getEmployerID(purchase.customerID),
         }));
-        setPurchasesArray(formattedPurchases);
+        const reversedPurchases = formattedPurchases.reverse();
+        setPurchasesArray(reversedPurchases);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching purchases:", error);
@@ -53,6 +56,21 @@ const Settled = () => {
       }
     };
 
+    const fetchSettledBills = async () => {
+      try {
+        // Fetch settled bills data from backend or wherever it's stored
+        const settledBillsData = await fetch(
+          "http://localhost:8000/api/transactions/settled"
+        );
+        const settledBillsJson = await settledBillsData.json();
+        setSettledBills(settledBillsJson);
+      } catch (error) {
+        console.error("Error fetching settled bills:", error);
+        // Handle error
+      }
+    };
+
+    fetchSettledBills();
     fetchPurchases();
   }, []);
 
@@ -63,17 +81,80 @@ const Settled = () => {
     return employee ? employee.EmployeeName : "";
   };
 
-  const [selectedRows, setSelectedRows] = React.useState([]); // State to store selected rows
+  const getEmployerID = (employeeId) => {
+    const employee = mockDataEmployees.find(
+      (emp) => emp.EmployeeId === employeeId
+    );
+    return employee ? employee.EmployerId : "";
+  };
 
+  // Filter out settled bills from purchasesArray
+  const filteredPurchasesArray = purchasesArray.filter(
+    (purchase) =>
+      !settledBills.some(
+        (settledBill) => settledBill.index === parseInt(purchase.index._hex, 16)
+      )
+  );
+
+  // console.log(purchasesArray)
   const handleSelectionChange = (newSelection) => {
-    // Handle selection change here
-    // console.log("New selection:", newSelection);
     setSelectedRows(newSelection);
   };
 
-  const handleSettleButtonClick = () => {
-    console.log("Selected transactions:", selectedRows);
-    // You can perform actions on the selected transactions here (e.g., API call)
+  const handleSettleButtonClick = async () => {
+    try {
+      const selectedTransactions = purchasesArray.filter((row) =>
+        selectedRows.includes(row.id)
+      );
+
+      // Transform selected transactions into the specified format
+      const transformedTransactions = selectedTransactions.map(
+        (transaction) => {
+          const currentDate = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
+
+          return {
+            employeeid: transaction.customerID,
+            employerid: transaction.employerid,
+            billdate: transaction.date,
+            settlementdate: currentDate,
+            transactionvalue: parseInt(transaction.price._hex, 16), // Convert hex value to integer
+            index: parseInt(transaction.index._hex, 16), // Convert hex value to integer
+          };
+        }
+      );
+
+      console.log(JSON.stringify(transformedTransactions));
+
+      // Post transformed transactions to the backend
+      const response = await fetch(
+        "http://localhost:8000/api/transactions/settled",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(transformedTransactions),
+        }
+      );
+      const json = await response.json();
+
+      if (!response.ok) {
+        setError(json.error);
+        throw new Error("Failed to settle transactions");
+      } else if (response.ok) {
+        console.log("Transactions settled:", json);
+        // Update purchasesArray state to reflect settled transactions
+        const updatedPurchasesArray = purchasesArray.filter(
+          (row) => !selectedRows.includes(row.id)
+        );
+        setPurchasesArray(updatedPurchasesArray);
+      }
+      // Clear the selection
+      setSelectedRows([]);
+    } catch (error) {
+      console.error("Error settling transactions:", error);
+      // Handle error
+    }
   };
 
   if (error) {
@@ -125,78 +206,78 @@ const Settled = () => {
           ></l-mirage>
         </div>
       ) : (
-      <Box
-        display="flex"
-        flexDirection="column"
-        marginTop="40px"
-        sx={{
-          position: "relative",
-        }}
-      >
-        <Button
-          id="settleButton"
-          variant="contained"
-          color="secondary"
-          onClick={handleSettleButtonClick}
-          sx={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            zIndex: 1,
-          }}
-        >
-          Settle Transactions
-        </Button>
         <Box
-          height="75vh"
+          display="flex"
+          flexDirection="column"
+          marginTop="40px"
           sx={{
-            "& .MuiDataGrid-root": {
-              border: "none",
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "none",
-            },
-            "& .name-column--cell": {
-              color: colors.greenAccent[300],
-            },
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: colors.blueAccent[700],
-              borderBottom: "none",
-            },
-            "& .MuiDataGrid-virtualScroller": {
-              backgroundColor: colors.primary[400],
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderTop: "none",
-              backgroundColor: colors.blueAccent[700],
-            },
-            "& .MuiCheckbox-root": {
-              color: `${colors.greenAccent[200]} !important`,
-            },
-            "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-              color: `${colors.grey[100]} !important`,
-            },
+            position: "relative",
           }}
         >
-          <DataGrid
-            getRowId={(row) => row.id}
-            checkboxSelection
-            onRowSelectionModelChange={handleSelectionChange}
-            rows={purchasesArray}
-            columns={columns}
-            slots={{
-              toolbar: GridToolbarContainer,
-              columnsButton: GridToolbarColumnsButton,
-              filterButton: GridToolbarFilterButton,
-              densitySelector: GridToolbarDensitySelector,
-              exportButton: GridToolbarExport,
+          <Button
+            id="settleButton"
+            variant="contained"
+            color="secondary"
+            onClick={handleSettleButtonClick}
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 0,
+              zIndex: 1,
             }}
-          />
+          >
+            Settle Transactions
+          </Button>
+          <Box
+            height="75vh"
+            sx={{
+              "& .MuiDataGrid-root": {
+                border: "none",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none",
+              },
+              "& .name-column--cell": {
+                color: colors.greenAccent[300],
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: colors.blueAccent[700],
+                borderBottom: "none",
+              },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: colors.primary[400],
+              },
+              "& .MuiDataGrid-footerContainer": {
+                borderTop: "none",
+                backgroundColor: colors.blueAccent[700],
+              },
+              "& .MuiCheckbox-root": {
+                color: `${colors.greenAccent[200]} !important`,
+              },
+              "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+                color: `${colors.grey[100]} !important`,
+              },
+            }}
+          >
+            <DataGrid
+              getRowId={(row) => row.id}
+              checkboxSelection
+              onRowSelectionModelChange={handleSelectionChange}
+              rows={filteredPurchasesArray}
+              columns={columns}
+              slots={{
+                toolbar: GridToolbarContainer,
+                columnsButton: GridToolbarColumnsButton,
+                filterButton: GridToolbarFilterButton,
+                densitySelector: GridToolbarDensitySelector,
+                exportButton: GridToolbarExport,
+              }}
+            />
+          </Box>
         </Box>
-      </Box>
       )}
     </Box>
   );
 };
 
-export default Settled;
+export default Pending;

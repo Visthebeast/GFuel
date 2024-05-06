@@ -50,7 +50,9 @@ const Settled = () => {
           name: getEmployeeName(transaction.employeeid),
         }));
 
-        setTransactions(transactionsWithEmployeeNames);
+        const reversedTransactionsWithEmployeeNames=transactionsWithEmployeeNames.reverse();
+
+        setTransactions(reversedTransactionsWithEmployeeNames);
         setLoading(false);
         // Set loading to false after data is fetched
       } catch (error) {

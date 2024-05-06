@@ -37,22 +37,10 @@ const getEmployeeTransaction = async(req,res) => {
 
 //create new settled transactions
 const createTransaction = async(req,res) =>{
-        const {
-          employeeid,
-          employerid,
-          billdate,
-          settlementdate,
-          transactionvalue,
-        } = req.body;
+        const transactions = req.body;
 //add doc to db
         try {
-          const settled = await settledBill.create({
-            employeeid,
-            employerid,
-            billdate,
-            settlementdate,
-            transactionvalue,
-          });
+          const settled = await settledBill.create(transactions);
           res.status(200).json(settled);
         } catch (error) {
           res.status(400).json({ error: error.message });
