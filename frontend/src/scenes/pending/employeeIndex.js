@@ -16,6 +16,7 @@ import config from "./config";
 import { mirage } from "ldrs";
 import Typography from "@mui/material/Typography";
 
+
 mirage.register();
 
 // const empID="EMP001"
@@ -222,15 +223,23 @@ const EmployeePending = ({ empID }) => {
       <Header title="Pending Transactions" subtitle="My pending bills" />
       {/* Add remaining allowance display */}
       <Box
-        display="flex"
-        justifyContent="flex-end"
-        alignItems="center"
-        marginBottom="10px"
+        position="absolute"
+        top="130px" // Adjust the distance from the top as needed
+        right="20px" // Adjust the distance from the right as needed
+        backgroundColor={colors.primary[400]} // Add a subtle background highlight
+        padding="8px" // Add padding for better visual separation
+        borderRadius="4px" // Add rounded corners for a softer look
       >
-        <Typography variant="body1" color="textSecondary">
-          Remaining Allowance: {getRemainingAllowance()}
+        <Typography
+          variant="body1"
+          color={colors.greenAccent[300]} // Adjust text color based on theme
+          fontWeight="bold" // Make the text bold for emphasis
+        >
+          <span style={{ marginRight: "8px" }}>Remaining Allowance:</span>₹
+          {getRemainingAllowance()}/-
         </Typography>
       </Box>
+
       {loading ? ( // Show loading indicator while data is being fetched
         <div
           style={{

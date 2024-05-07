@@ -126,7 +126,7 @@ const Sidebar = () => {
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-              Employee Transactions
+              Transactions
             </Typography>
             <Item
               title="Settled"
