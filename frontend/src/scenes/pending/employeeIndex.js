@@ -14,6 +14,7 @@ import { ethers } from "ethers";
 import { mockDataEmployees } from "../../data/mockData";
 import config from "./config";
 import { mirage } from "ldrs";
+import Typography from "@mui/material/Typography";
 
 mirage.register();
 
@@ -27,6 +28,20 @@ const EmployeePending = ({ empID }) => {
   const [error, setError] = useState(null);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [settledBills, setSettledBills] = useState([]);
+
+  const getRemainingAllowance = () => {
+  const employee = mockDataEmployees.find(
+    (emp) => emp.EmployeeId === empID
+  );
+  if (employee) {
+    const totalTransactionsValue = settledBills.reduce(
+    (acc, bill) => acc + bill.transactionvalue,
+    0
+    );
+    return employee.EmployeeMonthlyAllowance - totalTransactionsValue;
+  }
+  return 0; // Default to 0 if employee not found
+  };
 
   useEffect(() => {
     const fetchPurchases = async () => {
@@ -68,7 +83,7 @@ const EmployeePending = ({ empID }) => {
       try {
         // Fetch settled bills data from backend or wherever it's stored
         const settledBillsData = await fetch(
-          "http://localhost:8000/api/transactions/settled"
+          `http://localhost:8000/api/transactions/employee/${empID}`
         );
         const settledBillsJson = await settledBillsData.json();
         setSettledBills(settledBillsJson);
@@ -77,6 +92,7 @@ const EmployeePending = ({ empID }) => {
         // Handle error
       }
     };
+
 
     fetchSettledBills();
     fetchPurchases();
@@ -156,6 +172,12 @@ const EmployeePending = ({ empID }) => {
           (row) => !selectedRows.includes(row.id)
         );
         setPurchasesArray(updatedPurchasesArray);
+        // Update settledBills state to trigger re-render
+        const fetchedSettledBills = await fetch(
+          `http://localhost:8000/api/transactions/employee/${empID}`
+        );
+        const settledBillsJson = await fetchedSettledBills.json();
+        setSettledBills(settledBillsJson);
       }
       // Clear the selection
       setSelectedRows([]);
@@ -198,6 +220,17 @@ const EmployeePending = ({ empID }) => {
   return (
     <Box m="20px">
       <Header title="Pending Transactions" subtitle="My pending bills" />
+      {/* Add remaining allowance display */}
+      <Box
+        display="flex"
+        justifyContent="flex-end"
+        alignItems="center"
+        marginBottom="10px"
+      >
+        <Typography variant="body1" color="textSecondary">
+          Remaining Allowance: {getRemainingAllowance()}
+        </Typography>
+      </Box>
       {loading ? ( // Show loading indicator while data is being fetched
         <div
           style={{

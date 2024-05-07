@@ -344,7 +344,7 @@ export const mockDataEmployees = [
     EmployeePhone: "123-456-7890",
     EmployeePosition: "Manager",
     EmployerId: "EMPLOYER001",
-    EmployeeMonthlyAllowance: 3000,
+    EmployeeMonthlyAllowance: 15000,
   },
   {
     _id: {
@@ -357,7 +357,7 @@ export const mockDataEmployees = [
     EmployeePhone: "987-654-3210",
     EmployeePosition: "Assistant Manager",
     EmployerId: "EMPLOYER001",
-    EmployeeMonthlyAllowance: 2500,
+    EmployeeMonthlyAllowance: 20000,
   },
   {
     _id: {
@@ -370,7 +370,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-123-4567",
     EmployeePosition: "Sales Associate",
     EmployerId: "EMPLOYER001",
-    EmployeeMonthlyAllowance: 2800,
+    EmployeeMonthlyAllowance: 10000,
   },
   {
     _id: {
@@ -383,7 +383,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-987-6543",
     EmployeePosition: "Marketing Coordinator",
     EmployerId: "EMPLOYER002",
-    EmployeeMonthlyAllowance: 2700,
+    EmployeeMonthlyAllowance: 10000,
   },
   {
     _id: {
@@ -396,7 +396,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-567-8901",
     EmployeePosition: "Accountant",
     EmployerId: "EMPLOYER002",
-    EmployeeMonthlyAllowance: 3200,
+    EmployeeMonthlyAllowance: 15000,
   },
   {
     _id: {
@@ -409,7 +409,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-234-5678",
     EmployeePosition: "HR Specialist",
     EmployerId: "EMPLOYER002",
-    EmployeeMonthlyAllowance: 2900,
+    EmployeeMonthlyAllowance: 14000,
   },
   {
     _id: {
@@ -422,7 +422,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-876-5432",
     EmployeePosition: "Software Developer",
     EmployerId: "EMPLOYER003",
-    EmployeeMonthlyAllowance: 3500,
+    EmployeeMonthlyAllowance: 18000,
   },
   {
     _id: {
@@ -435,7 +435,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-345-6789",
     EmployeePosition: "Customer Service Representative",
     EmployerId: "EMPLOYER003",
-    EmployeeMonthlyAllowance: 2600,
+    EmployeeMonthlyAllowance: 11000,
   },
   {
     _id: {
@@ -448,7 +448,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-654-3210",
     EmployeePosition: "Quality Assurance Analyst",
     EmployerId: "EMPLOYER003",
-    EmployeeMonthlyAllowance: 3000,
+    EmployeeMonthlyAllowance: 11000,
   },
   {
     _id: {
@@ -461,7 +461,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-456-7890",
     EmployeePosition: "Graphic Designer",
     EmployerId: "EMPLOYER004",
-    EmployeeMonthlyAllowance: 2800,
+    EmployeeMonthlyAllowance: 20000,
   },
   {
     _id: {
@@ -474,7 +474,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-789-0123",
     EmployeePosition: "Project Manager",
     EmployerId: "EMPLOYER004",
-    EmployeeMonthlyAllowance: 3200,
+    EmployeeMonthlyAllowance: 10000,
   },
   {
     _id: {
@@ -487,7 +487,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-890-1234",
     EmployeePosition: "Data Analyst",
     EmployerId: "EMPLOYER004",
-    EmployeeMonthlyAllowance: 2900,
+    EmployeeMonthlyAllowance: 10000,
   },
   {
     _id: {
@@ -500,7 +500,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-012-3456",
     EmployeePosition: "Business Analyst",
     EmployerId: "EMPLOYER005",
-    EmployeeMonthlyAllowance: 3100,
+    EmployeeMonthlyAllowance: 15000,
   },
   {
     _id: {
@@ -513,7 +513,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-234-5678",
     EmployeePosition: "Executive Assistant",
     EmployerId: "EMPLOYER005",
-    EmployeeMonthlyAllowance: 2700,
+    EmployeeMonthlyAllowance: 12000,
   },
   {
     _id: {
@@ -526,7 +526,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-456-7890",
     EmployeePosition: "Systems Administrator",
     EmployerId: "EMPLOYER005",
-    EmployeeMonthlyAllowance: 3300,
+    EmployeeMonthlyAllowance: 10000,
   },
   {
     _id: {
@@ -539,7 +539,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-678-9012",
     EmployeePosition: "Content Writer",
     EmployerId: "EMPLOYER001",
-    EmployeeMonthlyAllowance: 2800,
+    EmployeeMonthlyAllowance: 20000,
   },
   {
     _id: {
@@ -552,7 +552,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-890-1234",
     EmployeePosition: "Financial Analyst",
     EmployerId: "EMPLOYER002",
-    EmployeeMonthlyAllowance: 3100,
+    EmployeeMonthlyAllowance: 18000,
   },
   {
     _id: {
@@ -565,7 +565,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-234-5678",
     EmployeePosition: "Operations Manager",
     EmployerId: "EMPLOYER003",
-    EmployeeMonthlyAllowance: 3200,
+    EmployeeMonthlyAllowance: 13000,
   },
   {
     _id: {
@@ -578,7 +578,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-456-7890",
     EmployeePosition: "IT Technician",
     EmployerId: "EMPLOYER004",
-    EmployeeMonthlyAllowance: 2900,
+    EmployeeMonthlyAllowance: 10000,
   },
   {
     _id: {
@@ -591,7 +591,7 @@ export const mockDataEmployees = [
     EmployeePhone: "555-678-9012",
     EmployeePosition: "Research Analyst",
     EmployerId: "EMPLOYER005",
-    EmployeeMonthlyAllowance: 3100,
+    EmployeeMonthlyAllowance: 10000,
   },
 ];
 

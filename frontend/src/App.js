@@ -50,9 +50,9 @@ function App() {
                 <Routes>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/employer/settled" element={<Settled employerID="EMPLOYER002" />} />
-                  <Route path="/employee/settled" element={<EmployeeSettled empID="EMP004"/>} />
+                  <Route path="/employee/settled" element={<EmployeeSettled empID="EMP002"/>} />
                   <Route path="/employer/pending" element={<Pending employerID="EMPLOYER001" />} />
-                  <Route path="/employee/pending" element={<EmployeePending empID="EMP004"/>} />
+                  <Route path="/employee/pending" element={<EmployeePending empID="EMP002"/>} />
                   <Route path="/form" element={<Form />} />
                   <Route path="/complaint" element={<ComplaintForm />} />
                 </Routes>
