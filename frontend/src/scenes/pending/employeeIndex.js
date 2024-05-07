@@ -17,7 +17,9 @@ import { mirage } from "ldrs";
 
 mirage.register();
 
-const Pending = ({ employerID}) => {
+// const empID="EMP001"
+
+const EmployeePending = ({ empID }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [purchasesArray, setPurchasesArray] = useState([]);
@@ -39,20 +41,20 @@ const Pending = ({ employerID}) => {
           wallet
         );
 
-        const purchasesData = await contract.getAllPurchases();
-        const formattedPurchases = purchasesData.map((purchase, index) => ({
+        const allPurchasesData = await contract.getAllPurchases();
+
+        // Filter purchases to get only transactions with customerID matching empID to get specific employee data
+        const filteredPurchasesData = allPurchasesData.filter(
+          (purchase) => purchase.customerID === empID
+        );
+
+        const formattedPurchases = filteredPurchasesData.map((purchase, index) => ({
           ...purchase,
           id: index,
           Name: getEmployeeName(purchase.customerID),
           employerid: getEmployerID(purchase.customerID),
         }));
-
-        //filtering pending transactions under specific employer
-        const filteredPurchasesData = formattedPurchases.filter(
-          (purchase) => purchase.employerid === employerID
-        );
-
-        const reversedPurchases = filteredPurchasesData.reverse();
+        const reversedPurchases = formattedPurchases.reverse();
         setPurchasesArray(reversedPurchases);
         setLoading(false);
       } catch (error) {
@@ -78,7 +80,7 @@ const Pending = ({ employerID}) => {
 
     fetchSettledBills();
     fetchPurchases();
-  }, [employerID]);
+  }, [empID]);
 
   const getEmployeeName = (employeeId) => {
     const employee = mockDataEmployees.find(
@@ -195,7 +197,7 @@ const Pending = ({ employerID}) => {
 
   return (
     <Box m="20px">
-      <Header title="Pending Transactions" subtitle="Managing the Employees" />
+      <Header title="Pending Transactions" subtitle="My pending bills" />
       {loading ? ( // Show loading indicator while data is being fetched
         <div
           style={{
@@ -286,4 +288,4 @@ const Pending = ({ employerID}) => {
   );
 };
 
-export default Pending;
+export default EmployeePending;

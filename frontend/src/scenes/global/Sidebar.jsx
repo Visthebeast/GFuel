@@ -130,14 +130,14 @@ const Sidebar = () => {
             </Typography>
             <Item
               title="Settled"
-              to="/settled"
+              to="/employee/settled"
               icon={<CheckCircleOutlineIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Pending"
-              to="/pending"
+              to="/employee/pending"
               icon={<PendingActionsIcon />}
               selected={selected}
               setSelected={setSelected}

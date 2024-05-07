@@ -11,6 +11,8 @@ import Form from "./scenes/form";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import ComplaintForm from "./scenes/complaint/userindex";
+import EmployeePending from "./scenes/pending/employeeIndex";
+import EmployeeSettled from "./scenes/Settled/employeeIndex";
 
 function AuthenticatedLayout({ children }) {
   const [isSidebar, setIsSidebar] = useState(true);
@@ -36,7 +38,7 @@ function App() {
         <CssBaseline />
         <Routes>
           {/* Unauthenticated Routes */}
-          <Route path="/" element={<LoginPage />} />          
+          <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationForm />} />
 
@@ -47,8 +49,10 @@ function App() {
               <AuthenticatedLayout>
                 <Routes>
                   <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/settled" element={<Settled />} />
-                  <Route path="/pending" element={<Pending />} />
+                  <Route path="/employer/settled" element={<Settled employerID="EMPLOYER002" />} />
+                  <Route path="/employee/settled" element={<EmployeeSettled empID="EMP004"/>} />
+                  <Route path="/employer/pending" element={<Pending employerID="EMPLOYER001" />} />
+                  <Route path="/employee/pending" element={<EmployeePending empID="EMP004"/>} />
                   <Route path="/form" element={<Form />} />
                   <Route path="/complaint" element={<ComplaintForm />} />
                 </Routes>

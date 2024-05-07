@@ -9,8 +9,8 @@ const handleNewUser = async (req, res) => {
     if (!id||!phone||!position||!yerid||!allowance||!mail||!user||!pwd) return res.status(400).json({ 'message': ' all fields are required.' });
 
     // check for duplicate EmployeeNames in the db
-    const duplicate = await User.findOne({ EmployeeName: user }).exec();
-    const duplicate1 = await User.findOne({ EmployeeEmail: mail }).exec();
+    const duplicate = await User.findOne({ Name: user }).exec();
+    const duplicate1 = await User.findOne({ Email: mail }).exec();
     if (duplicate||duplicate1) return res.sendStatus(409); //Conflict 
 
     try {
@@ -21,10 +21,10 @@ const handleNewUser = async (req, res) => {
         const result = await User.create({
             
             EmployeeId: id,
-            EmployeePassword: hashedPwd,
-            EmployeeName: user,
-            EmployeeEmail: mail,
-            EmployeePhone: phone,
+            Password: hashedPwd,
+            Name: user,
+            Email: mail,
+            Phone: phone,
             EmployeePosition: position,
             EmployerId: yerid,
             EmployeeMonthlyAllowance: allowance

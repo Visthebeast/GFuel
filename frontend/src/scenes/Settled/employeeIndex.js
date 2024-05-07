@@ -11,12 +11,11 @@ import {
   GridToolbarExport,
 } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { mirage } from 'ldrs'
+import { mirage } from "ldrs";
 
-mirage.register()
+mirage.register();
 
 // Default values shown
-
 
 function CustomToolbar() {
   return (
@@ -29,7 +28,7 @@ function CustomToolbar() {
   );
 }
 
-const Settled = ({ employerID }) => {
+const EmployeeSettled = ({ empID }) => {
   const [transactions, setTransactions] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
 
@@ -37,7 +36,7 @@ const Settled = ({ employerID }) => {
     const fetchTransactions = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/transactions/employer/${employerID}`
+          `http://localhost:8000/api/transactions/employee/${empID}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch transactions");
@@ -50,7 +49,8 @@ const Settled = ({ employerID }) => {
           name: getEmployeeName(transaction.employeeid),
         }));
 
-        const reversedTransactionsWithEmployeeNames=transactionsWithEmployeeNames.reverse();
+        const reversedTransactionsWithEmployeeNames =
+          transactionsWithEmployeeNames.reverse();
 
         setTransactions(reversedTransactionsWithEmployeeNames);
         setLoading(false);
@@ -61,7 +61,7 @@ const Settled = ({ employerID }) => {
     };
 
     fetchTransactions();
-  }, [employerID]);
+  }, [empID]);
 
   // console.log(transactions)
 
@@ -69,14 +69,13 @@ const Settled = ({ employerID }) => {
   const colors = tokens(theme.palette.mode);
 
   // Function to get employee name from employee ID
-const getEmployeeName = (employeeId) => {
-  const employee = mockDataEmployees.find(
-    (emp) => emp.EmployeeId === employeeId
-  );
-  // console.log("Employee found:", employee); // Log the found employee
-  return employee ? employee.EmployeeName : "";
-};
-
+  const getEmployeeName = (employeeId) => {
+    const employee = mockDataEmployees.find(
+      (emp) => emp.EmployeeId === employeeId
+    );
+    // console.log("Employee found:", employee); // Log the found employee
+    return employee ? employee.EmployeeName : "";
+  };
 
   const columns = [
     {
@@ -175,4 +174,4 @@ const getEmployeeName = (employeeId) => {
   );
 };
 
-export default Settled;
+export default EmployeeSettled;
