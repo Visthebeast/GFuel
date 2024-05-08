@@ -137,7 +137,7 @@ const Sidebar = () => {
             />
             <Item
               title="Pending"
-              to="/employee/pending"
+              to="/employer/pending"
               icon={<PendingActionsIcon />}
               selected={selected}
               setSelected={setSelected}
