@@ -1,4 +1,5 @@
-import { Box, Button, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
+// import { Button } from "@mui/material"
 import React, { useEffect, useState } from "react";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -27,7 +28,7 @@ const EmployeePending = ({ empID }) => {
   const [purchasesArray, setPurchasesArray] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedRows, setSelectedRows] = React.useState([]);
+//   const [selectedRows, setSelectedRows] = React.useState([]);
   const [settledBills, setSettledBills] = useState([]);
 
   const getRemainingAllowance = () => {
@@ -121,72 +122,72 @@ const EmployeePending = ({ empID }) => {
       )
   );
 
-  // console.log(purchasesArray)
-  const handleSelectionChange = (newSelection) => {
-    setSelectedRows(newSelection);
-  };
+//   // console.log(purchasesArray)
+//   const handleSelectionChange = (newSelection) => {
+//     setSelectedRows(newSelection);
+//   };
 
-  const handleSettleButtonClick = async () => {
-    try {
-      const selectedTransactions = purchasesArray.filter((row) =>
-        selectedRows.includes(row.id)
-      );
+//   const handleSettleButtonClick = async () => {
+//     try {
+//       const selectedTransactions = purchasesArray.filter((row) =>
+//         selectedRows.includes(row.id)
+//       );
 
-      // Transform selected transactions into the specified format
-      const transformedTransactions = selectedTransactions.map(
-        (transaction) => {
-          const currentDate = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
+//       // Transform selected transactions into the specified format
+//       const transformedTransactions = selectedTransactions.map(
+//         (transaction) => {
+//           const currentDate = new Date().toISOString().split("T")[0]; // Get current date in YYYY-MM-DD format
 
-          return {
-            employeeid: transaction.customerID,
-            employerid: transaction.employerid,
-            billdate: transaction.date,
-            settlementdate: currentDate,
-            transactionvalue: parseInt(transaction.price._hex, 16), // Convert hex value to integer
-            index: parseInt(transaction.index._hex, 16), // Convert hex value to integer
-          };
-        }
-      );
+//           return {
+//             employeeid: transaction.customerID,
+//             employerid: transaction.employerid,
+//             billdate: transaction.date,
+//             settlementdate: currentDate,
+//             transactionvalue: parseInt(transaction.price._hex, 16), // Convert hex value to integer
+//             index: parseInt(transaction.index._hex, 16), // Convert hex value to integer
+//           };
+//         }
+//       );
 
-      console.log(JSON.stringify(transformedTransactions));
+//       console.log(JSON.stringify(transformedTransactions));
 
-      // Post transformed transactions to the backend
-      const response = await fetch(
-        "http://localhost:8000/api/transactions/settled",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(transformedTransactions),
-        }
-      );
-      const json = await response.json();
+//       // Post transformed transactions to the backend
+//       const response = await fetch(
+//         "http://localhost:8000/api/transactions/settled",
+//         {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify(transformedTransactions),
+//         }
+//       );
+//       const json = await response.json();
 
-      if (!response.ok) {
-        setError(json.error);
-        throw new Error("Failed to settle transactions");
-      } else if (response.ok) {
-        console.log("Transactions settled:", json);
-        // Update purchasesArray state to reflect settled transactions
-        const updatedPurchasesArray = purchasesArray.filter(
-          (row) => !selectedRows.includes(row.id)
-        );
-        setPurchasesArray(updatedPurchasesArray);
-        // Update settledBills state to trigger re-render
-        const fetchedSettledBills = await fetch(
-          `http://localhost:8000/api/transactions/employee/${empID}`
-        );
-        const settledBillsJson = await fetchedSettledBills.json();
-        setSettledBills(settledBillsJson);
-      }
-      // Clear the selection
-      setSelectedRows([]);
-    } catch (error) {
-      console.error("Error settling transactions:", error);
-      // Handle error
-    }
-  };
+//       if (!response.ok) {
+//         setError(json.error);
+//         throw new Error("Failed to settle transactions");
+//       } else if (response.ok) {
+//         console.log("Transactions settled:", json);
+//         // Update purchasesArray state to reflect settled transactions
+//         const updatedPurchasesArray = purchasesArray.filter(
+//           (row) => !selectedRows.includes(row.id)
+//         );
+//         setPurchasesArray(updatedPurchasesArray);
+//         // Update settledBills state to trigger re-render
+//         const fetchedSettledBills = await fetch(
+//           `http://localhost:8000/api/transactions/employee/${empID}`
+//         );
+//         const settledBillsJson = await fetchedSettledBills.json();
+//         setSettledBills(settledBillsJson);
+//       }
+//       // Clear the selection
+//       setSelectedRows([]);
+//     } catch (error) {
+//       console.error("Error settling transactions:", error);
+//       // Handle error
+//     }
+//   };
 
   if (error) {
     return <div>{error}</div>;
@@ -264,7 +265,7 @@ const EmployeePending = ({ empID }) => {
             position: "relative",
           }}
         >
-          <Button
+          {/* <Button
             id="settleButton"
             variant="contained"
             color="secondary"
@@ -277,7 +278,7 @@ const EmployeePending = ({ empID }) => {
             }}
           >
             Settle Transactions
-          </Button>
+          </Button> */}
           <Box
             height="75vh"
             sx={{
@@ -312,7 +313,7 @@ const EmployeePending = ({ empID }) => {
             <DataGrid
               getRowId={(row) => row.id}
               checkboxSelection
-              onRowSelectionModelChange={handleSelectionChange}
+            //   onRowSelectionModelChange={handleSelectionChange}
               rows={filteredPurchasesArray}
               columns={columns}
               slots={{
