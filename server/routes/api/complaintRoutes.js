@@ -4,7 +4,8 @@ const router = express.Router();
 const {
     getComplaintsByEmployeeId,
     getComplaintsByEmployerId,
-    createComplaint
+    createComplaint,
+    deleteComplaintById
     } = require("../../controllers/complaintsController")
 
 router.get("/", (req, res) => {
@@ -19,5 +20,8 @@ router.get("/employer/:employerId", getComplaintsByEmployerId);
 
 // Create a new complaint
 router.post("/filecomplaint",createComplaint);
+
+//delete a complaint by id
+router.delete("/:id",deleteComplaintById)
 
 module.exports = router;

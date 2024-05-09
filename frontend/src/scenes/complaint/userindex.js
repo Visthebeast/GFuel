@@ -3,12 +3,55 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
+import { mockDataEmployees } from "../../data/mockData";
 
-const ComplaintForm = () => {
+
+
+const ComplaintForm = ({ empID }) => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
-  const handleFormSubmit = (values) => {
-    console.log(values);
+  const findEmployerIdByEmpId = (empID) => {
+    const employee = mockDataEmployees.find(
+      (employee) => employee.EmployeeId === empID
+    );
+    if (employee) {
+      return employee.EmployerId;
+    } else {
+      return null; // Return null if empID is not found
+    }
+  };
+
+  const employerId = findEmployerIdByEmpId(empID);
+
+  const handleFormSubmit = async (values) => {
+    try {
+      // Assuming you have an API endpoint to submit the complaint
+      const response = await fetch(
+        "http://localhost:8000/api/complaints/filecomplaint",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...values,
+            employeeid: empID,
+            employerid: employerId
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to submit complaint");
+      }
+
+      // Handle success
+      console.log("Complaint submitted successfully");
+      // console.log(response)
+    } catch (error) {
+      // Handle error
+      console.error("Error submitting complaint:", error);
+    }
   };
 
   return (

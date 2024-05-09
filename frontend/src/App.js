@@ -13,6 +13,7 @@ import { ColorModeContext, useMode } from "./theme";
 import ComplaintForm from "./scenes/complaint/userindex";
 import EmployeePending from "./scenes/pending/employeeIndex";
 import EmployeeSettled from "./scenes/Settled/employeeIndex";
+import EmployerComplaints from "./scenes/complaintsDisplay";
 
 function AuthenticatedLayout({ children }) {
   const [isSidebar, setIsSidebar] = useState(true);
@@ -54,7 +55,8 @@ function App() {
                   <Route path="/employer/pending" element={<Pending employerID="EMPLOYER001" />} />
                   <Route path="/employee/pending" element={<EmployeePending empID="EMP002"/>} />
                   <Route path="/form" element={<Form />} />
-                  <Route path="/complaint" element={<ComplaintForm />} />
+                  <Route path="/complaint" element={<ComplaintForm empID="EMP001"/>} />
+                  <Route path="/employerComplaints" element={<EmployerComplaints employerID="EMPLOYER001"/>} />
                 </Routes>
               </AuthenticatedLayout>
             }

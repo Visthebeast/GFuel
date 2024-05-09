@@ -4,7 +4,7 @@ const Complaint = require("../model/ComplaintModel")
 const getComplaintsByEmployeeId = async (req, res) => {
   try {
     const { employeeId } = req.params;
-    const complaints = await Complaint.find({ employeeId });
+    const complaints = await Complaint.find({ employeeid: employeeId });
     res.status(200).json(complaints);
   } catch (error) {
     console.error(error);
@@ -16,8 +16,12 @@ const getComplaintsByEmployeeId = async (req, res) => {
 const getComplaintsByEmployerId = async (req, res) => {
   try {
     const { employerId } = req.params;
-    const complaints = await Complaint.find({ employerId });
-    res.status(200).json(complaints);
+    const complaints = await Complaint.find({ employerid: employerId })
+    if(!complaints){
+        return res.status(404).json({error: 'No bills'})
+    }
+
+    res.status(200).json(complaints)
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -36,8 +40,24 @@ const createComplaint = async (req, res) => {
   }
 };
 
+// Delete a complaint by ID
+const deleteComplaintById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const deletedComplaint = await Complaint.findByIdAndDelete(id);
+        if (!deletedComplaint) {
+            return res.status(404).json({ message: "Complaint not found" });
+        }
+        res.status(200).json({ message: "Complaint deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
 module.exports = {
   getComplaintsByEmployeeId,
   getComplaintsByEmployerId,
   createComplaint,
+  deleteComplaintById,
 };
