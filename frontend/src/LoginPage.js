@@ -57,7 +57,7 @@ const LoginPage = (() => {
       errRef.current.focus();
     }
     // Assuming login is successful, navigate to DashboardPage
-    navigate('/employee/settled');
+    // navigate('/employee/settled');
   };
 
   return (

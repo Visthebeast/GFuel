@@ -14,25 +14,6 @@ const ROLES_LIST = require('../../config/roles_list');
 
 const verifyRoles = require('../../middleware/verifyRoles');
 
-// router.route('/')
-    
-// //.post(verifyRoles(ROLES_LIST.User), transactionsController.addTransaction)
-//     .post(transactionsController.addTransaction)
-    
-//     //.get(verifyRoles(ROLES_LIST.User), transactionsController.getAllTransactions)
-//     .get(transactionsController.getAllTransactions)
-    
-//     //.delete(verifyRoles(ROLES_LIST.User), transactionsController.deleteTransaction);
-
-// router.route('/yee/:id')
-//     //.get(verifyRoles(ROLES_LIST.User), transactionsController.getYeeTransaction);
-//     .get(transactionsController.getYeeTransaction);
-
-// router.route('/yer/:id')
-//     //.get(verifyRoles(ROLES_LIST.User), transactionsController.getYeeTransaction);
-//     .get(transactionsController.getYerTransaction);
-
-// module.exports = router;
 
 //get all transactions
 router.get('/', (req,res) =>{
@@ -58,3 +39,22 @@ router.delete('/:id',deleteTransaction)
 router.patch('/:id',updateTransaction)
 
 module.exports = router
+// router.route('/')
+    
+// //.post(verifyRoles(ROLES_LIST.User), transactionsController.addTransaction)
+//     .post(transactionsController.addTransaction)
+    
+//     //.get(verifyRoles(ROLES_LIST.User), transactionsController.getAllTransactions)
+//     .get(transactionsController.getAllTransactions)
+    
+//     //.delete(verifyRoles(ROLES_LIST.User), transactionsController.deleteTransaction);
+
+// router.route('/yee/:id')
+//     //.get(verifyRoles(ROLES_LIST.User), transactionsController.getYeeTransaction);
+//     .get(transactionsController.getYeeTransaction);
+
+// router.route('/yer/:id')
+//     //.get(verifyRoles(ROLES_LIST.User), transactionsController.getYeeTransaction);
+//     .get(transactionsController.getYerTransaction);
+
+// module.exports = router;

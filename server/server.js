@@ -51,6 +51,7 @@ app.use('/logout', require('./routes/logout'));
 
 app.use('/users', require('./routes/api/users'));
 app.use('/api/transactions', require('./routes/api/transactions'));
+app.use('/api/complaints', require('./routes/api/complaintRoutes'))
 
 app.all('*', (req, res) => {
     res.status(404);
