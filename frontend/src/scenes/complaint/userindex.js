@@ -23,7 +23,7 @@ const ComplaintForm = ({ empID }) => {
 
   const employerId = findEmployerIdByEmpId(empID);
 
-  const handleFormSubmit = async (values) => {
+  const handleFormSubmit = async (values, {resetForm}) => {
     try {
       // Assuming you have an API endpoint to submit the complaint
       const response = await fetch(
@@ -47,6 +47,7 @@ const ComplaintForm = ({ empID }) => {
 
       // Handle success
       console.log("Complaint submitted successfully");
+      resetForm();
       // console.log(response)
     } catch (error) {
       // Handle error

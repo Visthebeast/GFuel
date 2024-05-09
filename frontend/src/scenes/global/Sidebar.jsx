@@ -41,10 +41,13 @@ const Sidebar = () => {
     <Box
       sx={{
         "& .pro-sidebar-inner": {
+          height:"100%",
           background: `${colors.primary[400]} !important`,
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
+          height: "150%",
+          position: "relative"
         },
         "& .pro-inner-item": {
           padding: "5px 35px 5px 20px !important",
