@@ -46,7 +46,7 @@ const Sidebar = () => {
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
-          height: "150%",
+          height: "100%",
           position: "relative"
         },
         "& .pro-inner-item": {
